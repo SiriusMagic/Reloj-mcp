@@ -172,4 +172,10 @@
         <item quantity="other">%1$d veces</item>
     </plurals>
     <string name="snooze_summary">%1$d min, %2$s</string>
+    <string name="summary_next">Próxima alarma: %1$s</string>
+    <string name="summary_timer">Temporizador: quedan %1$s</string>
+    <string name="summary_timer_paused">Temporizador en pausa: %1$s</string>
+    <string name="summary_stopwatch">Cronómetro: %1$s</string>
+    <string name="summary_empty">Ninguna alarma activa</string>
+    <string name="summary_permission">Resumen para Inicio</string>
 </resources>

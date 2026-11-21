@@ -3,7 +3,7 @@
 Reloj, alarmas, reloj mundial, temporizador y cronómetro para Android, en negro con acento naranja. Parte de la familia
 de Stone, Luma, Calculadora, Notas, Filem y Nivel: tu IA (Claude, ChatGPT…) puede **leer y crear tus alarmas** por MCP.
 
-## Estado (0.1.0)
+## Estado (0.2.0)
 
 - **Alarma:** lista con interruptor y «lun a vie. La alarma sonará en 1 día»; tocar edita, mantener elimina.
   «Agregar alarma» con ruedas (12 o 24 h según el teléfono), Repetir (días), Sonar en fecha específica (ruedas de mes,
@@ -24,9 +24,10 @@ de Stone, Luma, Calculadora, Notas, Filem y Nivel: tu IA (Claude, ChatGPT…) pu
 - **Modo MCP:** `clock_alarms`, `clock_next_alarm`, `clock_world_time` y, con token de lectura y escritura,
   `clock_alarm_create`, `clock_alarm_enable`, `clock_alarm_delete`. Mismo relay y Gateway Hub (módulo `clock_`) que las
   demás apps.
+- **Resumen para Inicio:** próxima alarma, temporizador y cronómetro en la pantalla «Hoy» de Inicio.
 - Sin anuncios ni estadísticas; internet solo para el Modo MCP (apagado de fábrica).
 
-APK: [`android/Reloj-0.1.0.apk`](android/Reloj-0.1.0.apk) (`com.zirakusa.reloj`, firmado como Stone y Gateway Hub).
+APK: [`android/Reloj-0.2.0.apk`](android/Reloj-0.2.0.apk) (`com.zirakusa.reloj`, firmado como Stone y Gateway Hub).
 Para «Añadir nuevo» con Filem hace falta Filem 0.3.0 o posterior.
 
 ## Compilar y probar

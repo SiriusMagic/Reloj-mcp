@@ -1,3 +1,9 @@
+# Reloj 0.2.0
+
+- **Resumen de familia**: la tarjeta de Reloj en la pantalla «Hoy» de Inicio (próxima alarma con su etiqueta, temporizador
+  y cronómetro en marcha). Lo da `SummaryProvider` (`${applicationId}.summary`), solo a apps con la misma firma.
+- 21 pruebas.
+
 # Reloj 0.1.0
 
 Primera versión: reloj con alarmas, reloj mundial, temporizador y cronómetro, en negro con acento naranja.

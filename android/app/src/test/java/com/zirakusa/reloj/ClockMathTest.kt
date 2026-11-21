@@ -163,4 +163,15 @@ class ClockMathTest {
         s.presets = listOf(Preset("Té", 180_000)); assertEquals(listOf(Preset("Té", 180_000)), s.presets)
         s.timerTone = Sound.SILENT; assertEquals(Sound.SILENT, s.timerTone)
     }
+
+    @Test fun summaryForInicio() {
+        val t = SummaryLines.Texts("Próxima alarma: %1${'$'}s", "Temporizador: quedan %1${'$'}s", "En pausa: %1${'$'}s", "Cronómetro: %1${'$'}s")
+        val time = { z: ZonedDateTime -> "%d:%02d".format(z.hour, z.minute) }
+        val alarms = listOf(Alarm(1, 6, 2, days = setOf(MONDAY)), Alarm(2, 13, 30, label = "Almuerzo"))
+        val ms = now.toInstant().toEpochMilli()
+        assertEquals(listOf("Próxima alarma: 13:30 · Almuerzo", "Temporizador: quedan 05:00", "Cronómetro: 00:12"),
+            SummaryLines.lines(alarms, CountDown.start(300_000, ms), Stopwatch().start(ms - 12_000), now, { false }, t, time))
+        assertEquals(listOf("En pausa: 01:00"), SummaryLines.lines(emptyList(), CountDown.start(60_000, ms).pause(ms), Stopwatch(), now, { false }, t, time))
+        assertTrue(SummaryLines.lines(listOf(Alarm(hour = 7, enabled = false)), CountDown(), Stopwatch(), now, { false }, t, time).isEmpty())
+    }
 }

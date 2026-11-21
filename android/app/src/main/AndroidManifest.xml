@@ -14,6 +14,9 @@
     <!-- «Redireccionar a Hub»: only apps signed with the same key (Gateway Hub) get this permission. -->
     <permission android:name="com.zirakusa.gatewayhub.permission.LINK" android:protectionLevel="signature"
         android:label="@string/hub_link_permission" />
+    <!-- The family summary (Reloj's card in Inicio): only apps signed with the same key may read it. -->
+    <permission android:name="com.zirakusa.family.permission.SUMMARY" android:protectionLevel="signature"
+        android:label="@string/summary_permission" />
     <queries>
         <!-- «Ir al Hub» opens Gateway Hub; «Añadir nuevo» opens our Filem first. -->
         <package android:name="com.zirakusa.gatewayhub" />
@@ -47,6 +50,7 @@
             </intent-filter>
             <meta-data android:name="com.zirakusa.gatewayhub.module" android:value="clock_" />
             <meta-data android:name="com.zirakusa.gatewayhub.link" android:value="${applicationId}.hublink" />
+            <meta-data android:name="com.zirakusa.family.summary" android:value="${applicationId}.summary" />
         </activity>
         <activity android:name=".RingActivity" android:exported="false" android:launchMode="singleInstance"
             android:excludeFromRecents="true" android:taskAffinity="" />
@@ -60,6 +64,8 @@
             </intent-filter>
         </receiver>
         <service android:name=".RingService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
+        <provider android:name=".SummaryProvider" android:authorities="${applicationId}.summary"
+            android:exported="true" android:permission="com.zirakusa.family.permission.SUMMARY" />
         <provider android:name=".mcp.HubLinkProvider" android:authorities="${applicationId}.hublink"
             android:exported="true" android:permission="com.zirakusa.gatewayhub.permission.LINK" />
     </application>

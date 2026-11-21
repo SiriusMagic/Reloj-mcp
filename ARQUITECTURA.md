@@ -13,6 +13,7 @@ Carpeta = package (`android/app/src/main/java/com/zirakusa/reloj/`):
 | `RingService.kt` / `Ringing.kt` | Servicio en primer plano que suena (volumen creciente), vibra y muestra la notificación de pantalla completa con Posponer y Detener; se pospone solo tras «Silenciar tras». `Ringing` guarda lo que suena y qué hacen Posponer y Detener. |
 | `RingActivity.kt` | La alarma sonando sobre la pantalla de bloqueo. |
 | `Sounds.kt` | Tonos de alarma del teléfono, sonidos propios (copiados a `files/sounds`, máx. 50 MB) y `Player`. |
+| `Summary.kt` | `SummaryLines` (pura, con prueba) y `SummaryProvider`: el resumen de familia para Inicio, solo para apps con la misma firma. |
 | `MainActivity.kt` | Crea el estado, reprograma, «Añadir nuevo» (Filem primero, si no las apps de archivos), permisos (notificaciones, pantalla completa, alarmas exactas) e «Ir al Hub». |
 
 Reglas:

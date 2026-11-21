@@ -168,4 +168,10 @@
         <item quantity="other">%1$d times</item>
     </plurals>
     <string name="snooze_summary">%1$d min, %2$s</string>
+    <string name="summary_next">Next alarm: %1$s</string>
+    <string name="summary_timer">Timer: %1$s left</string>
+    <string name="summary_timer_paused">Timer paused: %1$s</string>
+    <string name="summary_stopwatch">Stopwatch: %1$s</string>
+    <string name="summary_empty">No alarm on</string>
+    <string name="summary_permission">Summary for Inicio</string>
 </resources>
