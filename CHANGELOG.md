@@ -1,4 +1,4 @@
-# Sin publicar
+# Reloj 0.3.0
 
 - **Órdenes estándar de Android** (FAMILIA.md §10): «poner alarma» (hora, minutos, nombre y días), «poner temporizador»,
   «ver alarmas» y «ver temporizadores». Las usa el Asistente de la familia y cualquier asistente o app con el permiso
