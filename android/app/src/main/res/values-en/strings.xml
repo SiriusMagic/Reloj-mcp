@@ -174,4 +174,6 @@
     <string name="summary_stopwatch">Stopwatch: %1$s</string>
     <string name="summary_empty">No alarm on</string>
     <string name="summary_permission">Summary for Inicio</string>
+    <string name="order_alarm">Alarm at %1$s</string>
+    <string name="order_timer">Timer for %1$s</string>
 </resources>

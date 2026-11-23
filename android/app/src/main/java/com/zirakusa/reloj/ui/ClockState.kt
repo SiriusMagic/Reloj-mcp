@@ -97,6 +97,21 @@ class ClockState(values: KeyValues, private val clock: () -> ZonedDateTime = Zon
     fun removeCity(city: City) { cities = cities.filterNot { it.id == city.id }; settings.cities = cities.map { it.id } }
     fun toggleAnalog() { analog = !analog; settings.analog = analog }
 
+    /** «Poner alarma» from another app or an assistant: saved (or the same one turned on) and shown in «Alarmas». */
+    fun alarmFromOrder(hour: Int, minute: Int, label: String?, days: List<Int>?): Alarm? {
+        val alarm = com.zirakusa.reloj.data.Orders.alarm(hour, minute, label, days, store.list()) ?: return null
+        val saved = store.save(alarm.copy(enabled = true))
+        changed(); tab = Tab.ALARMS; page = Page.MAIN
+        return saved
+    }
+
+    /** «Poner temporizador» from another app or an assistant: it starts at once, shown in «Temporizador». */
+    fun timerFromOrder(seconds: Int, label: String?): Boolean {
+        val ms = com.zirakusa.reloj.data.Orders.timer(seconds) ?: return false
+        startTimer(ms, label.orEmpty().take(40)); tab = Tab.TIMER; page = Page.MAIN
+        return true
+    }
+
     // «Temporizador»
     fun startTimer(ms: Long, name: String = "") {
         if (ms <= 0) return

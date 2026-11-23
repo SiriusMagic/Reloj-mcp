@@ -1,3 +1,10 @@
+# Sin publicar
+
+- **Órdenes estándar de Android** (FAMILIA.md §10): «poner alarma» (hora, minutos, nombre y días), «poner temporizador»,
+  «ver alarmas» y «ver temporizadores». Las usa el Asistente de la familia y cualquier asistente o app con el permiso
+  `SET_ALARM`. Pedir dos veces la misma alarma no la duplica: la enciende. Con «sin mostrar» solo avisa y se cierra.
+- 23 pruebas.
+
 # Reloj 0.2.0
 
 - **Resumen de familia**: la tarjeta de Reloj en la pantalla «Hoy» de Inicio (próxima alarma con su etiqueta, temporizador

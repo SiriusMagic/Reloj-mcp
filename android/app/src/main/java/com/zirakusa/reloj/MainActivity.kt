@@ -12,6 +12,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
 import android.os.Bundle
+import android.provider.AlarmClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -76,6 +77,7 @@ class MainActivity : ComponentActivity() {
         AlarmScheduler.sync(this)
         val actions = AppActions(sounds = sounds, addSound = ::addSound, feel = ::feel, tick = { tone?.startTone(ToneGenerator.TONE_PROP_BEEP, 40) },
             alarmSaved = ::askNotifications, fix = ::fix, copy = ::copy, goToHub = ::goToHub)
+        if (savedInstanceState == null && order(intent)) return
         setContent {
             ClockTheme(state.themeMode, state.accent) {
                 val light = ClockColors.isLight
@@ -87,6 +89,36 @@ class MainActivity : ComponentActivity() {
                 RelojApp(state, actions)
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) { super.onNewIntent(intent); order(intent) }
+
+    /**
+     * Android's standard orders (FAMILIA.md §10): «poner alarma», «poner temporizador», «ver alarmas», «ver temporizadores».
+     * With «sin mostrar» (EXTRA_SKIP_UI) it only says so and closes. True when Reloj closed itself.
+     */
+    private fun order(intent: Intent?): Boolean {
+        val skip = intent?.getBooleanExtra(AlarmClock.EXTRA_SKIP_UI, false) == true
+        val message: Int; val arg: String
+        when (intent?.action) {
+            AlarmClock.ACTION_SET_ALARM -> {
+                if (!intent.hasExtra(AlarmClock.EXTRA_HOUR)) { state.newAlarm(); return false }
+                val a = state.alarmFromOrder(intent.getIntExtra(AlarmClock.EXTRA_HOUR, -1), intent.getIntExtra(AlarmClock.EXTRA_MINUTES, 0),
+                    intent.getStringExtra(AlarmClock.EXTRA_MESSAGE), intent.getIntegerArrayListExtra(AlarmClock.EXTRA_DAYS)) ?: return false
+                askNotifications(); message = R.string.order_alarm; arg = a.time
+            }
+            AlarmClock.ACTION_SET_TIMER -> {
+                if (!intent.hasExtra(AlarmClock.EXTRA_LENGTH)) { state.tab = Tab.TIMER; return false }
+                if (!state.timerFromOrder(intent.getIntExtra(AlarmClock.EXTRA_LENGTH, 0), intent.getStringExtra(AlarmClock.EXTRA_MESSAGE))) return false
+                val s = intent.getIntExtra(AlarmClock.EXTRA_LENGTH, 0); message = R.string.order_timer; arg = "%d:%02d".format(s / 60, s % 60)
+            }
+            AlarmClock.ACTION_SHOW_ALARMS -> { state.tab = Tab.ALARMS; state.page = Page.MAIN; return false }
+            AlarmClock.ACTION_SHOW_TIMERS -> { state.tab = Tab.TIMER; state.page = Page.MAIN; return false }
+            else -> return false
+        }
+        Toast.makeText(this, getString(message, arg), Toast.LENGTH_SHORT).show()
+        if (skip) { finish(); return true }
+        return false
     }
 
     override fun onResume() {

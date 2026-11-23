@@ -178,4 +178,6 @@
     <string name="summary_stopwatch">Cronómetro: %1$s</string>
     <string name="summary_empty">Ninguna alarma activa</string>
     <string name="summary_permission">Resumen para Inicio</string>
+    <string name="order_alarm">Alarma a las %1$s</string>
+    <string name="order_timer">Temporizador de %1$s</string>
 </resources>
