@@ -1,5 +1,7 @@
 package com.zirakusa.reloj.ui.screens
 
+import com.zirakusa.reloj.IconCard
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -70,6 +72,7 @@ import com.zirakusa.reloj.ui.theme.ClockColors
             }
             Item(stringResource(R.string.mcp_title), "$status · ${stringResource(R.string.mcp_settings_hint)}") { state.page = Page.MCP }
         }
+        IconCard(ClockColors.Card, ClockColors.Text, ClockColors.Muted, ClockColors.Accent, androidx.compose.ui.graphics.Color(0xFF000000))
         ThemeCard(state.themeMode, state.accent, state::changeTheme, state::changeAccent)
         Caption(stringResource(R.string.about))
         Group {
