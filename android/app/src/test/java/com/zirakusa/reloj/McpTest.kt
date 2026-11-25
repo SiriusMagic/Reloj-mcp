@@ -6,7 +6,6 @@ import com.zirakusa.reloj.data.MapValues
 import com.zirakusa.reloj.mcp.Access
 import com.zirakusa.reloj.mcp.ClockData
 import com.zirakusa.reloj.mcp.HubLink
-import com.zirakusa.reloj.mcp.Kind
 import com.zirakusa.reloj.mcp.McpHandler
 import com.zirakusa.reloj.mcp.Token
 import kotlinx.coroutines.runBlocking
@@ -23,7 +22,7 @@ import java.time.DayOfWeek
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-/** Reloj's MCP: tools list, good calls, bad arguments, not found, read-only tokens, wrong and paused tokens, hub link. */
+/** Reloj's MCP: tools list, good calls, bad arguments, not found, read-only tokens, wrong tokens, hub link. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 class McpTest {
@@ -37,10 +36,9 @@ class McpTest {
         override fun skipHolidays() = holidays
         override fun now(): ZonedDateTime = ZonedDateTime.of(2026, 11, 21, 6, 36, 40, 0, ZoneId.of("America/Guayaquil"))
     }
-    private val writer = Token("w", "Claude", "rel_" + "w".repeat(40), Access.WRITE, Kind.HUB, "Casa")
-    private val reader = Token("r", "Lector", "rel_" + "r".repeat(40), Access.READ)
-    private val paused = Token("p", "Viejo", "rel_" + "p".repeat(40), Access.WRITE, paused = true)
-    private val handler = McpHandler({ listOf(writer, reader, paused) }, data, "0.1.0")
+    private val writer = Token("rel_" + "w".repeat(40), Access.WRITE)
+    private val reader = Token("rel_" + "r".repeat(40), Access.READ)
+    private val handler = McpHandler({ listOf(writer, reader) }, data, "0.1.0")
 
     init {
         store.save(Alarm(hour = 6, minute = 2, days = setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY)))
@@ -63,7 +61,7 @@ class McpTest {
         assertEquals(listOf("clock_alarms", "clock_next_alarm", "clock_world_time"), names(reader))
         val init = rpc(writer, "initialize")
         assertEquals("reloj", init.getJSONObject("serverInfo").getString("name"))
-        assertEquals("hub", init.getJSONObject("_meta").getJSONObject(McpHandler.TOKEN_META).getString("kind"))
+        assertEquals("redirect", init.getJSONObject("_meta").getJSONObject(McpHandler.TOKEN_META).getString("kind"))
     }
 
     @Test fun readsAlarmsAndTime() {
@@ -117,7 +115,7 @@ class McpTest {
 
     @Test fun wrongAndPausedTokensAndHubLink() = runBlocking {
         val body = """{"jsonrpc":"2.0","id":1,"method":"tools/list"}"""
-        assertEquals(401, handler.handle("POST", "/mcp", mapOf("Authorization" to "Bearer ${paused.secret}"), emptyMap(), body).status)
+        assertEquals(401, handler.handle("POST", "/mcp", mapOf("Authorization" to "Bearer wrong_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"), emptyMap(), body).status)
         assertEquals(401, handler.handle("POST", "/mcp", mapOf("Authorization" to "Bearer rel_wrong"), emptyMap(), body).status)
         assertEquals(401, handler.handle("POST", "/mcp", emptyMap(), emptyMap(), body).status)
         assertEquals(200, handler.handle("POST", "/mcp", emptyMap(), mapOf("token" to reader.secret), body).status)
@@ -125,25 +123,35 @@ class McpTest {
         assertTrue(Token.secret().startsWith("rel_"))
         assertEquals("NOT_SAME_DEVELOPER", HubLink.answer(false).getString("error"))
         assertEquals("REDIRECT_OFF", HubLink.answer(true).getString("error"))
-        // «Conectar todas» and Lucía's tools: only for the same developer, and tools only with «Redireccionar a Hub» on.
         assertEquals("NOT_SAME_DEVELOPER", HubLink.connect(false).getString("error"))
         assertEquals("NOT_SAME_DEVELOPER", HubLink.tool(false, "{}").getString("error"))
-        assertEquals("REDIRECT_OFF", HubLink.tool(true, "{}").getString("error"))
+        // Only the same developer (Arka) may connect, disconnect, read the status or run a tool.
+        listOf(HubLink.disconnect(false), HubLink.status(false)).forEach { assertEquals("NOT_SAME_DEVELOPER", it.getString("error")) }
     }
 
-    /** Lucía runs a tool on the phone through the same handler, only while «Redireccionar a Hub» is on. */
+    /** Lucía runs a tool on the phone through the same handler, with or without the public link; Arka turns that on and off. */
     @Test fun luciaRunsToolsOnThePhone() {
         val relay = com.zirakusa.reloj.mcp.McpMode.relayUrl
         com.zirakusa.reloj.mcp.McpMode.relayUrl = ""                                             // no relay in tests
         com.zirakusa.reloj.mcp.McpMode.load(org.robolectric.RuntimeEnvironment.getApplication())
-        com.zirakusa.reloj.mcp.McpMode.redirect(false)
-        assertEquals(null, com.zirakusa.reloj.mcp.McpMode.local("{}"))
-        HubLink.connect(true); assertTrue(com.zirakusa.reloj.mcp.McpMode.hubRedirect)                // «Conectar todas»
+        com.zirakusa.reloj.mcp.McpMode.turnRemote(false)
         val list = JSONObject(com.zirakusa.reloj.mcp.McpMode.local("""{"jsonrpc":"2.0","id":1,"method":"tools/list"}""")!!)
         assertTrue(list.getJSONObject("result").getJSONArray("tools").length() > 0)
         val viaProvider = JSONObject(HubLink.tool(true, """{"jsonrpc":"2.0","id":2,"method":"tools/list"}""").getString("response"))
         assertEquals(2, viaProvider.getInt("id"))
-        com.zirakusa.reloj.mcp.McpMode.redirect(false)
+        assertEquals("BAD_REQUEST", HubLink.tool(true, "").getString("error"))
+        assertEquals("NOT_SAME_DEVELOPER", HubLink.tool(false, "{}").getString("error"))
+        assertTrue(HubLink.status(true).containsKey("remote"))
+        HubLink.connect(true); assertTrue(com.zirakusa.reloj.mcp.McpMode.remote)                 // Arka › «Activar MCP»
+        assertFalse(HubLink.disconnect(true).getBoolean("remote")); assertFalse(com.zirakusa.reloj.mcp.McpMode.remote)
         com.zirakusa.reloj.mcp.McpMode.relayUrl = relay                                          // as the other tests expect
+    }
+
+    /** The hub's token from before Arka took over is kept, so the hub's link keeps working. */
+    @Test fun theOldHubTokenIsKept() {
+        val old = """[{"id":"a","secret":"${"l".repeat(44)}","kind":"llm"},{"id":"b","secret":"${"h".repeat(44)}","kind":"redirect"}]"""
+        assertEquals("h".repeat(44), com.zirakusa.reloj.mcp.Legacy.redirectSecret(old))
+        assertEquals(null, com.zirakusa.reloj.mcp.Legacy.redirectSecret("[]"))
+        assertEquals(null, com.zirakusa.reloj.mcp.Legacy.redirectSecret(""))
     }
 }

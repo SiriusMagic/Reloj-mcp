@@ -4,8 +4,6 @@ import android.Manifest
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
@@ -77,7 +75,7 @@ class MainActivity : ComponentActivity() {
         McpMode.load(this)
         AlarmScheduler.sync(this)
         val actions = AppActions(sounds = sounds, addSound = ::addSound, feel = ::feel, tick = { tone?.startTone(ToneGenerator.TONE_PROP_BEEP, 40) },
-            alarmSaved = ::askNotifications, fix = ::fix, copy = ::copy, goToHub = ::goToHub)
+            alarmSaved = ::askNotifications, fix = ::fix, openArka = ::openArka)
         if (savedInstanceState == null && order(intent)) return
         setContent {
             ClockTheme(state.themeMode, state.accent) {
@@ -135,7 +133,6 @@ class MainActivity : ComponentActivity() {
     private fun back() = when {
         state.page == Page.EDITOR && state.editorPage != EditorPage.MAIN -> state.editorPage = EditorPage.MAIN
         state.page == Page.EDITOR -> state.closeEditor()
-        state.page == Page.MCP -> state.page = Page.SETTINGS
         state.page != Page.MAIN -> state.page = Page.MAIN
         else -> state.tab = Tab.ALARMS
     }
@@ -210,16 +207,10 @@ class MainActivity : ComponentActivity() {
         try { startActivity(intent) } catch (_: ActivityNotFoundException) { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, app)) }
     }
 
-    private fun copy(link: String) {
-        getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("Reloj MCP", link))
-        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-    }
-
-    /** «Ir al Hub»: copies the hub's link (in case it must be pasted) and opens the Gateway Hub app. */
-    private fun goToHub() {
-        getSystemService(ClipboardManager::class.java)?.setPrimaryClip(ClipData.newPlainText("Reloj › Gateway Hub", McpMode.hubLink()))
+    /** «Modo MCP» in Ajustes: it is turned on, allowed on the phone and given tokens in Arka, so this opens Arka. */
+    private fun openArka() {
         val open = packageManager.getLaunchIntentForPackage("com.zirakusa.gatewayhub")
-        if (open != null) startActivity(open) else Toast.makeText(this, R.string.mcp_paste_in_hub, Toast.LENGTH_LONG).show()
+        if (open != null) startActivity(open) else Toast.makeText(this, R.string.mcp_no_arka, Toast.LENGTH_LONG).show()
     }
 
     private companion object { const val FILEM = "com.zirakusa.filem" }

@@ -1,7 +1,6 @@
 package com.zirakusa.reloj.ui.screens
 
 import com.zirakusa.reloj.IconCard
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,7 @@ import com.zirakusa.reloj.ui.Page
 import com.zirakusa.reloj.ui.theme.ClockColors
 
 /** «Ajustes»: alarm, timer and stopwatch options, Temas, Modo MCP, privacy and version. */
-@Composable fun SettingsScreen(state: ClockState) {
+@Composable fun SettingsScreen(state: ClockState, openArka: () -> Unit = {}) {
     var privacy by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(ClockColors.Background).systemBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -64,13 +63,12 @@ import com.zirakusa.reloj.ui.theme.ClockColors
         Group { SwitchItem(stringResource(R.string.stopwatch_sound), null, state.stopwatchSound, onChange = state::changeStopwatchSound) }
         Group {
             val status = when {
-                !McpMode.active -> stringResource(R.string.mcp_status_off)
-                McpMode.hubRedirect -> stringResource(R.string.mcp_redirect)
+                !McpMode.remote -> stringResource(R.string.mcp_status_off)
                 McpMode.state == RelayLink.State.ONLINE -> stringResource(R.string.mcp_online)
                 McpMode.state == RelayLink.State.CONNECTING -> stringResource(R.string.mcp_connecting)
                 else -> stringResource(R.string.mcp_offline)
             }
-            Item(stringResource(R.string.mcp_title), "$status · ${stringResource(R.string.mcp_settings_hint)}") { state.page = Page.MCP }
+            Item(stringResource(R.string.mcp_title), "$status · ${stringResource(R.string.mcp_settings_hint)}", onClick = openArka)
         }
         IconCard(ClockColors.Card, ClockColors.Text, ClockColors.Muted, ClockColors.Accent)
         ThemeCard(state.themeMode, state.accent, state::changeTheme, state::changeAccent)

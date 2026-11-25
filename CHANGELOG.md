@@ -1,3 +1,12 @@
+# Reloj 0.5.0
+
+- **El Modo MCP lo controla Arka**: se quita la pantalla «Modo MCP» (Activar MCP, Redireccionar a Hub, Crear token y la
+  lista de tokens). Activarlo, permitirlo en local y crear tokens se hace desde **Arka › MCP**; Ajustes › Modo MCP solo
+  muestra el estado y abre Arka. Si ya estaba conectada al hub, sigue conectada con el mismo enlace; los tokens LLM y Hub
+  creados aquí dejan de funcionar (créalos en Arka).
+- Lucía usa las herramientas en el teléfono aunque el enlace público esté apagado; lo decide «Permitir MCP local» en Arka.
+- App más ligera: 1,87 MB → 1,82 MB.
+
 # Reloj 0.4.0
 
 - **Iconos nuevos**: Cristal (el de fábrica), Plano, 3D, Píxel y Óleo, en Ajustes › Icono de la app. Se quitan los

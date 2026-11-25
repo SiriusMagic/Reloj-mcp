@@ -26,7 +26,7 @@ import java.time.ZonedDateTime
 enum class Tab { ALARMS, WORLD, TIMER, STOPWATCH }
 
 /** Pages over the tabs. */
-enum class Page { MAIN, EDITOR, CITIES, TIMER_EDITOR, TIMER_SOUND, SETTINGS, MCP }
+enum class Page { MAIN, EDITOR, CITIES, TIMER_EDITOR, TIMER_SOUND, SETTINGS }
 
 /** Pages inside «Agregar alarma». */
 enum class EditorPage { MAIN, REPEAT, SOUND, VIBRATION, SNOOZE }

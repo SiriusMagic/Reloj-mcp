@@ -35,7 +35,6 @@ import com.zirakusa.reloj.data.Vibration
 import com.zirakusa.reloj.ui.screens.AlarmEditor
 import com.zirakusa.reloj.ui.screens.AlarmsScreen
 import com.zirakusa.reloj.ui.screens.CityPicker
-import com.zirakusa.reloj.ui.screens.McpScreen
 import com.zirakusa.reloj.ui.screens.SettingsScreen
 import com.zirakusa.reloj.ui.screens.SoundPage
 import com.zirakusa.reloj.ui.screens.StopwatchScreen
@@ -72,7 +71,7 @@ class AppActions(
     val alarmSaved: () -> Unit = {},
     val fix: (Issue) -> Unit = {},
     val copy: (String) -> Unit = {},
-    val goToHub: () -> Unit = {},
+    val openArka: () -> Unit = {},
 )
 
 /** The whole app: one tab with the floating bar, or a page over it. [ticking] moves the clocks (off in tests). */
@@ -88,8 +87,7 @@ class AppActions(
         Page.CITIES -> return CityPicker(state)
         Page.TIMER_EDITOR -> return TimerEditor(state)
         Page.TIMER_SOUND -> return SoundPage(state.timerTone, actions, state::changeTimerTone) { state.page = Page.MAIN }
-        Page.SETTINGS -> return SettingsScreen(state)
-        Page.MCP -> return McpScreen(actions.copy, actions.goToHub) { state.page = Page.SETTINGS }
+        Page.SETTINGS -> return SettingsScreen(state, actions.openArka)
         Page.MAIN -> Unit
     }
     Box(Modifier.fillMaxSize().background(ClockColors.Background)) {
