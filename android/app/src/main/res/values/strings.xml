@@ -181,10 +181,10 @@
     <string name="order_alarm">Alarma a las %1$s</string>
     <string name="order_timer">Temporizador de %1$s</string>
     <string name="icon_title">Icono de la app</string>
-    <string name="icon_original">Original</string>
-    <string name="icon_light">Claro</string>
-    <string name="icon_gold">Dorado</string>
-    <string name="icon_blue">Azul</string>
-    <string name="icon_green">Verde</string>
+    <string name="icon_glass">Cristal</string>
+    <string name="icon_flat">Plano</string>
+    <string name="icon_clay">3D</string>
+    <string name="icon_oil">Óleo</string>
+    <string name="icon_pixel">Píxel</string>
     <string name="icon_hint">Cambia el icono de la pantalla de inicio. Algunos lanzadores tardan unos segundos en mostrarlo.</string>
 </resources>
