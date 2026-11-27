@@ -33,6 +33,7 @@ import com.zirakusa.reloj.data.Sound
 import com.zirakusa.reloj.data.SharedValues
 import com.zirakusa.reloj.data.Vibration
 import com.zirakusa.reloj.mcp.McpMode
+import com.zirakusa.reloj.mcp.showMcpOptions
 import com.zirakusa.reloj.ui.AppActions
 import com.zirakusa.reloj.ui.ClockState
 import com.zirakusa.reloj.ui.EditorPage
@@ -207,11 +208,7 @@ class MainActivity : ComponentActivity() {
         try { startActivity(intent) } catch (_: ActivityNotFoundException) { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, app)) }
     }
 
-    /** «Modo MCP» in Ajustes: it is turned on, allowed on the phone and given tokens in Arka, so this opens Arka. */
-    private fun openArka() {
-        val open = packageManager.getLaunchIntentForPackage("com.zirakusa.gatewayhub")
-        if (open != null) startActivity(open) else Toast.makeText(this, R.string.mcp_no_arka, Toast.LENGTH_LONG).show()
-    }
+    private fun openArka() = showMcpOptions(this)
 
     private companion object { const val FILEM = "com.zirakusa.filem" }
 }

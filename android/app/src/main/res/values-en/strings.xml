@@ -115,7 +115,7 @@
     <string name="version_title">Version</string>
     <string name="privacy">Privacy policy</string>
     <string name="privacy_text">Reloj has no ads or analytics. Your alarms, cities, timers and sounds are kept only on this phone, out of cloud backups. Sounds you add are copied inside Reloj. Only if you turn on MCP Mode can the AI you connect with a token read your alarms and, with a read-and-write token, create, switch or delete them through the relay.</string>
-    <string name="mcp_settings_hint">Controlled from Arka: turning it on, allowing it locally and creating tokens.</string>
+    <string name="mcp_settings_hint">Set up local access and redirection to Hub.</string>
     <string name="mcp_title">MCP mode</string>
     <string name="mcp_online">Connected to the internet</string>
     <string name="mcp_connecting">Connecting…</string>
@@ -154,5 +154,5 @@
     <string name="icon_oil">Oil</string>
     <string name="icon_pixel">Pixel</string>
     <string name="icon_hint">Changes the home-screen icon. Some launchers take a few seconds to show it.</string>
-    <string name="mcp_no_arka">Install Arka to turn MCP mode on.</string>
+    <string name="mcp_no_arka">Install Arka to manage Hub connections.</string>
 </resources>

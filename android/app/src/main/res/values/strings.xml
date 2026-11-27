@@ -115,7 +115,7 @@
     <string name="version_title">Versión</string>
     <string name="privacy">Política de privacidad</string>
     <string name="privacy_text">Reloj no tiene anuncios ni estadísticas. Tus alarmas, ciudades, temporizadores y sonidos se guardan solo en este teléfono, fuera de las copias en la nube. Los sonidos que añades se copian dentro de Reloj. Solo si activas el Modo MCP, la IA que conectes con un token puede leer tus alarmas y, si el token es de lectura y escritura, crearlas, activarlas o eliminarlas a través del relay.</string>
-    <string name="mcp_settings_hint">Lo controla Arka: activarlo, permitirlo en local y crear tokens.</string>
+    <string name="mcp_settings_hint">Configura el acceso local y la redirección a Hub.</string>
     <string name="mcp_title">Modo MCP</string>
     <string name="mcp_online">Conectado a internet</string>
     <string name="mcp_connecting">Conectando…</string>
@@ -158,5 +158,5 @@
     <string name="icon_oil">Óleo</string>
     <string name="icon_pixel">Píxel</string>
     <string name="icon_hint">Cambia el icono de la pantalla de inicio. Algunos lanzadores tardan unos segundos en mostrarlo.</string>
-    <string name="mcp_no_arka">Instala Arka para activar el Modo MCP.</string>
+    <string name="mcp_no_arka">Instala Arka para administrar los enlaces del Hub.</string>
 </resources>

@@ -63,7 +63,7 @@ import com.zirakusa.reloj.ui.theme.ClockColors
         Group { SwitchItem(stringResource(R.string.stopwatch_sound), null, state.stopwatchSound, onChange = state::changeStopwatchSound) }
         Group {
             val status = when {
-                !McpMode.remote -> stringResource(R.string.mcp_status_off)
+                !McpMode.active -> stringResource(R.string.mcp_status_off)
                 McpMode.state == RelayLink.State.ONLINE -> stringResource(R.string.mcp_online)
                 McpMode.state == RelayLink.State.CONNECTING -> stringResource(R.string.mcp_connecting)
                 else -> stringResource(R.string.mcp_offline)
